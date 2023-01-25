@@ -10,21 +10,23 @@ const initialIndex = 4 // the index the "B" is at
 const initialState = {
   message: initialMessage,
   email: initialEmail,
-  index: initialIndex,
-  steps: initialSteps,
+  currentIndex: initialIndex,
+  totalSteps: initialSteps,
+  coordinateX: 2,
+  coordinateY: 2,
 }
 
 export default class AppClass extends React.Component {
   // THE FOLLOWING HELPERS ARE JUST RECOMMENDATIONS.
   // You can delete them and build your own logic from scratch.
   state = {
-      email: '',
-      message: '',
-      totalSteps: 0,
-      movesX: 2,
-      movesY: 2,
+      email: initialEmail,
+      message: initialMessage,
+      totalSteps: initialSteps,
+      coordinateX: 2,
+      coordinateY: 2,
       board: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-      currentIndex: 4
+      currentIndex: initialIndex
     }
 
 
@@ -49,12 +51,40 @@ export default class AppClass extends React.Component {
     // This helper takes a direction ("left", "up", etc) and calculates what the next index
     // of the "B" would be. If the move is impossible because we are at the edge of the grid,
     // this helper should return the current index unchanged.
-    if (direction === 'up') console.log('up')
-    //   this.setState({...this.state,
-    //   movesY: this.state.movesY - 1
-    // })
-    // }
-  }
+    if (direction === 'up'){
+      // console.log('up');
+      this.setState({
+        ...this.state,
+        coordinateY: this.state.coordinateY - 1,
+        currentIndex: this.state.currentIndex - 3,
+        totalSteps: this.state.totalSteps + 1
+      })
+    } else if (direction === 'down') {
+      console.log('down');
+      this.setState({
+        ...this.state,
+        coordinateY: this.state.coordinateY + 1,
+        currentIndex: this.state.currentIndex + 3,
+        totalSteps: this.state.totalSteps + 1
+      })
+      } else if (direction === 'left') {
+      console.log('left');
+      this.setState({
+        ...this.state,
+        coordinateX: this.state.coordinateX - 1,
+        currentIndex: this.state.currentIndex - 1,
+        totalSteps: this.state.totalSteps + 1
+      })
+      } else if (direction === 'right') {
+        console.log('right');
+        this.setState({
+          ...this.state,
+          coordinateX: this.state.coordinateX + 1,
+          currentIndex: this.state.currentIndex + 1,
+          totalSteps: this.state.totalSteps + 1
+        })
+      }
+  } 
 
   move = (evt) => {
     // This event handler can use the helper above to obtain a new index for the "B",
@@ -82,7 +112,7 @@ export default class AppClass extends React.Component {
     return (
       <div id="wrapper" className={className}>
         <div className="info">
-          <h3 id="coordinates">{`Coordinates (${this.state.movesX}, ${this.state.movesY})`}</h3>
+          <h3 id="coordinates">{`Coordinates (${this.state.coordinateX}, ${this.state.coordinateY})`}</h3>
           <h3 id="steps">{`You moved ${this.state.totalSteps} times`}</h3>
         </div>
         <div id="grid">
@@ -98,10 +128,10 @@ export default class AppClass extends React.Component {
           <h3 id="message">{this.state.message}</h3>
         </div>
         <div id="keypad">
-          <button id="left">LEFT</button>
+          <button onClick={() => this.getNextIndex("left")} id="left">LEFT</button>
           <button onClick={() => this.getNextIndex("up")} id="up">UP</button>
-          <button id="right">RIGHT</button>
-          <button id="down">DOWN</button>
+          <button onClick={() => this.getNextIndex("right")} id="right">RIGHT</button>
+          <button onClick={() => this.getNextIndex("down")} id="down">DOWN</button>
           <button onClick={this.reset} id="reset">reset</button>
         </div>
         <form>
