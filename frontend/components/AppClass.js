@@ -25,7 +25,6 @@ export default class AppClass extends React.Component {
       totalSteps: initialSteps,
       coordinateX: 2,
       coordinateY: 2,
-      board: [0, 1, 2, 3, 4, 5, 6, 7, 8],
       currentIndex: initialIndex
     }
 
@@ -35,62 +34,63 @@ export default class AppClass extends React.Component {
     // It's enough to know what index the "B" is at, to be able to calculate them.
   }
 
-  getXYMessage = () => {
+  getXYMessage = (direction) => {
     // It it not necessary to have a state to track the "Coordinates (2, 2)" message for the user.
     // You can use the `getXY` helper above to obtain the coordinates, and then `getXYMessage`
     // returns the fully constructed string.
-  }
-
-  reset = () => {
-    // Use this helper to reset all states to their initial values.
-    // console.log('clicked reset');
-    this.setState(initialState)
+    
+    if (this.state.coordinateY === 1 && direction === 'up' || this.state.coordinateY === 3 && direction === 'down') {
+      this.setState({
+        ...this.state,
+        message: `You can't go ${direction}`
+      })
+    } 
   }
 
   getNextIndex = (direction) => {
-    // This helper takes a direction ("left", "up", etc) and calculates what the next index
-    // of the "B" would be. If the move is impossible because we are at the edge of the grid,
-    // this helper should return the current index unchanged.
     if (direction === 'up'){
-      // console.log('up');
+      // this.setState({
+      //   ...this.state,
+      //   message: initialMessage});
       this.setState({
         ...this.state,
-        coordinateY: this.state.coordinateY - 1,
-        currentIndex: this.state.currentIndex - 3,
-        totalSteps: this.state.totalSteps + 1
+        coordinateY: this.state.coordinateY === 1 ? this.state.coordinateY : this.state.coordinateY - 1,
+        currentIndex: this.state.coordinateY === 1 ? this.state.currentIndex : this.state.currentIndex - 3,
+        totalSteps: this.state.totalSteps + 1,
       })
     } else if (direction === 'down') {
-      console.log('down');
+      // this.setState({
+      //   ...this.state,
+      //   message: initialMessage});
       this.setState({
         ...this.state,
-        coordinateY: this.state.coordinateY + 1,
-        currentIndex: this.state.currentIndex + 3,
+        coordinateY: this.state.coordinateY === 3 ? this.state.coordinateY : this.state.coordinateY + 1,
+        currentIndex: this.state.coordinateY === 3 ? this.state.currentIndex : this.state.currentIndex + 3,
         totalSteps: this.state.totalSteps + 1
       })
       } else if (direction === 'left') {
-      console.log('left');
+      // console.log('left');
       this.setState({
         ...this.state,
-        coordinateX: this.state.coordinateX - 1,
-        currentIndex: this.state.currentIndex - 1,
+        coordinateX: this.state.coordinateX === 1 ? this.state.coordinateX : this.state.coordinateX - 1,
+        currentIndex: this.state.coordinateX === 1 ? this.state.currentIndex : this.state.currentIndex - 1,
         totalSteps: this.state.totalSteps + 1
       })
       } else if (direction === 'right') {
-        console.log('right');
+        // console.log('right');
         this.setState({
           ...this.state,
-          coordinateX: this.state.coordinateX + 1,
-          currentIndex: this.state.currentIndex + 1,
+          coordinateX: this.state.coordinateX === 3 ? this.state.coordinateX : this.state.coordinateX + 1,
+          currentIndex: this.state.coordinateX === 3 ? this.state.currentIndex : this.state.currentIndex + 1,
           totalSteps: this.state.totalSteps + 1
         })
       }
+      this.getXYMessage(direction)
   } 
 
-  move = (evt) => {
-    // This event handler can use the helper above to obtain a new index for the "B",
-    // and change any states accordingly.
-    
-  }
+  reset = () => {
+    this.setState(initialState)
+  } 
 
   onChange = (evt) => {
     // You will need this to update the value of the input.
@@ -107,6 +107,12 @@ export default class AppClass extends React.Component {
     evt.preventDefault();
   }
 
+    // move = (evt) => {
+  //   // This event handler can use the helper above to obtain a new index for the "B",
+  //   // and change any states accordingly.
+    
+  // }
+
   render() {
     const { className } = this.props
     return (
@@ -117,7 +123,7 @@ export default class AppClass extends React.Component {
         </div>
         <div id="grid">
           { 
-            this.state.board.map(idx => (
+            [0, 1, 2, 3, 4, 5, 6, 7, 8].map(idx => (
               <div key={idx} className={`square${idx === this.state.currentIndex ? ' active' : ''}`}>
                 {idx === this.state.currentIndex ? 'B' : null}
               </div>
