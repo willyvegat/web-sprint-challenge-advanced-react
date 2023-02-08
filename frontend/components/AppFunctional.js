@@ -80,11 +80,11 @@ export default function AppFunctional(props) {
   } 
 
   const reset = () => {
-    setState(initialState)
+    setState({...initialState})
   } 
 
   const resetEmail = () => {
-    setState({email: initialEmail});
+    setState({ ...state, email: initialEmail});
   } 
 
   const onChange = (evt) => {

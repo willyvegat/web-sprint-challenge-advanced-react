@@ -81,7 +81,7 @@ export default class AppClass extends React.Component {
   } 
 
   reset = () => {
-    this.setState(initialState)
+    this.setState({...initialState})
   }
 
   resetEmail = () => {
