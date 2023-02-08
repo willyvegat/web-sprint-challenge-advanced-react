@@ -6,7 +6,6 @@ const initialMessage = '';
 const initialEmail = '';
 const initialSteps = 0;
 const initialIndex = 4;
-// const initialErrorMessage = '';
 
 
 const initialState = {
@@ -16,7 +15,6 @@ const initialState = {
   steps: initialSteps,
   coordinateX: 2,
   coordinateY: 2,
-  // errorMessage: initialErrorMessage
 }
 
 export default class AppClass extends React.Component {
@@ -26,16 +24,8 @@ export default class AppClass extends React.Component {
       steps: initialSteps,
       coordinateX: 2,
       coordinateY: 2,
-      currentIndex: initialIndex,
-      // errorMessage: initialErrorMessage,
-      winner: ''
+      currentIndex: initialIndex
     }
-
-
-  getXY = () => {
-    // It it not necessary to have a state to track the coordinates.
-    // It's enough to know what index the "B" is at, to be able to calculate them.
-  }
 
   getXYMessage = (direction) => {
     if (this.state.coordinateY === 1 && direction === 'up' || this.state.coordinateY === 3 && direction === 'down') {
@@ -103,12 +93,8 @@ export default class AppClass extends React.Component {
     })
   }
 
-  // postEmail = () => {
-
-  // }
 
   onSubmit = (evt) => {
-    // Use a POST request to send a payload to the server.
     evt.preventDefault();
     axios.post('http://localhost:9000/api/result', {
       email: this.state.email, 
