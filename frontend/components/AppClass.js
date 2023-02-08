@@ -6,7 +6,7 @@ const initialMessage = '';
 const initialEmail = '';
 const initialSteps = 0;
 const initialIndex = 4;
-const initialErrorMessage = '';
+// const initialErrorMessage = '';
 
 
 const initialState = {
@@ -16,7 +16,7 @@ const initialState = {
   steps: initialSteps,
   coordinateX: 2,
   coordinateY: 2,
-  errorMessage: initialErrorMessage
+  // errorMessage: initialErrorMessage
 }
 
 export default class AppClass extends React.Component {
@@ -27,7 +27,7 @@ export default class AppClass extends React.Component {
       coordinateX: 2,
       coordinateY: 2,
       currentIndex: initialIndex,
-      errorMessage: initialErrorMessage,
+      // errorMessage: initialErrorMessage,
       winner: ''
     }
 
@@ -118,13 +118,13 @@ export default class AppClass extends React.Component {
     })
       .then(res => {
         console.log(res)
-        this.setState({ ...this.state, email: this.state.email, winner: res.data.message})
+        this.setState({ ...this.state, email: this.state.email, message: res.data.message})
       })
       .catch(err => {
         console.log(err)
         this.setState({
           ...this.state,
-          errorMessage: err.response.data.message
+          message: err.response.data.message
         })
       })
   }
@@ -148,7 +148,7 @@ export default class AppClass extends React.Component {
           }
         </div>
         <div className="info">
-          <h3 id="message">{this.state.message}{this.state.errorMessage}{this.state.winner}</h3>
+          <h3 id="message">{this.state.message}{this.state.winner}</h3>
         </div>
         <div id="keypad">
           <button onClick={() => this.getNextIndex("left")} id="left">LEFT</button>
