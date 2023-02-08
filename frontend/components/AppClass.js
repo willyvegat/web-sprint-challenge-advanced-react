@@ -2,31 +2,33 @@ import React from 'react';
 import axios from 'axios';
 
 
-// Suggested initial states
-const initialMessage = ''
-const initialEmail = ''
-const initialSteps = 0
-const initialIndex = 4 // the index the "B" is at
+const initialMessage = '';
+const initialEmail = '';
+const initialSteps = 0;
+const initialIndex = 4;
+const initialErrorMessage = '';
+
 
 const initialState = {
   message: initialMessage,
   email: initialEmail,
   currentIndex: initialIndex,
-  totalSteps: initialSteps,
+  steps: initialSteps,
   coordinateX: 2,
   coordinateY: 2,
+  errorMessage: initialErrorMessage
 }
 
 export default class AppClass extends React.Component {
-  // THE FOLLOWING HELPERS ARE JUST RECOMMENDATIONS.
-  // You can delete them and build your own logic from scratch.
   state = {
       email: initialEmail,
       message: initialMessage,
-      totalSteps: initialSteps,
+      steps: initialSteps,
       coordinateX: 2,
       coordinateY: 2,
-      currentIndex: initialIndex
+      currentIndex: initialIndex,
+      errorMessage: initialErrorMessage,
+      winner: ''
     }
 
 
@@ -47,13 +49,6 @@ export default class AppClass extends React.Component {
         message: `You can't go ${direction}`
       })
     }
-    // else {
-    //   this.setState({
-    //     ...this.state,
-    //     message: initialMessage
-    //   });
-    // }
-    
   }
 
   getNextIndex = (direction) => {
@@ -63,7 +58,7 @@ export default class AppClass extends React.Component {
         ...this.state,
         coordinateY: this.state.coordinateY === 1 ? this.state.coordinateY : this.state.coordinateY - 1,
         currentIndex: this.state.coordinateY === 1 ? this.state.currentIndex : this.state.currentIndex - 3,
-        totalSteps: this.state.totalSteps + 1,
+        steps: this.state.steps + 1,
         message: initialMessage
       })
     } else if (direction === 'down') {
@@ -71,25 +66,23 @@ export default class AppClass extends React.Component {
         ...this.state,
         coordinateY: this.state.coordinateY === 3 ? this.state.coordinateY : this.state.coordinateY + 1,
         currentIndex: this.state.coordinateY === 3 ? this.state.currentIndex : this.state.currentIndex + 3,
-        totalSteps: this.state.totalSteps + 1,
+        steps: this.state.steps + 1,
         message: initialMessage
       })
       } else if (direction === 'left') {
-      // console.log('left');
       this.setState({
         ...this.state,
         coordinateX: this.state.coordinateX === 1 ? this.state.coordinateX : this.state.coordinateX - 1,
         currentIndex: this.state.coordinateX === 1 ? this.state.currentIndex : this.state.currentIndex - 1,
-        totalSteps: this.state.totalSteps + 1,
+        steps: this.state.steps + 1,
         message: initialMessage
       })
       } else if (direction === 'right') {
-        // console.log('right');
         this.setState({
           ...this.state,
           coordinateX: this.state.coordinateX === 3 ? this.state.coordinateX : this.state.coordinateX + 1,
           currentIndex: this.state.coordinateX === 3 ? this.state.currentIndex : this.state.currentIndex + 1,
-          totalSteps: this.state.totalSteps + 1,
+          steps: this.state.steps + 1,
           message: initialMessage
         })
       }
@@ -102,27 +95,37 @@ export default class AppClass extends React.Component {
   } 
 
   onChange = (evt) => {
-    // You will need this to update the value of the input.
     evt.preventDefault();
     const { value } = evt.target;
-    // console.log(value)
     this.setState({
       ...this.state,
       email: value
     })
-    // this.reset();
   }
+
+  // postEmail = () => {
+
+  // }
 
   onSubmit = (evt) => {
     // Use a POST request to send a payload to the server.
     evt.preventDefault();
-    axios.post('http://localhost:9000/api/result', { email: this.state.email })
+    axios.post('http://localhost:9000/api/result', {
+      email: this.state.email, 
+      steps: this.state.steps,
+      x: this.state.coordinateX,
+      y: this.state.coordinateY 
+    })
       .then(res => {
-        debugger
-        // this.setState({ ...this.state, email:})
+        console.log(res)
+        this.setState({ ...this.state, email: this.state.email, winner: res.data.message})
       })
       .catch(err => {
-        debugger
+        console.log(err)
+        this.setState({
+          ...this.state,
+          errorMessage: err.response.data.message
+        })
       })
   }
 
@@ -133,7 +136,7 @@ export default class AppClass extends React.Component {
       <div id="wrapper" className={className}>
         <div className="info">
           <h3 id="coordinates">{`Coordinates (${this.state.coordinateX}, ${this.state.coordinateY})`}</h3>
-          <h3 id="steps">{`You moved ${this.state.totalSteps} times`}</h3>
+          <h3 id="steps">{`You moved ${this.state.steps} times`}</h3>
         </div>
         <div id="grid">
           { 
@@ -145,7 +148,7 @@ export default class AppClass extends React.Component {
           }
         </div>
         <div className="info">
-          <h3 id="message">{this.state.message}</h3>
+          <h3 id="message">{this.state.message}{this.state.errorMessage}{this.state.winner}</h3>
         </div>
         <div id="keypad">
           <button onClick={() => this.getNextIndex("left")} id="left">LEFT</button>
@@ -154,9 +157,9 @@ export default class AppClass extends React.Component {
           <button onClick={() => this.getNextIndex("down")} id="down">DOWN</button>
           <button onClick={this.reset} id="reset">reset</button>
         </div>
-        <form>
-          <input onChange={this.onChange} id="email" type="email" placeholder="type email"></input>
-          <input onSubmit={this.onSubmit} id="submit" type="submit"></input>
+        <form onSubmit={this.onSubmit} >
+          <input onChange={this.onChange} value={this.state.email} id="email" type="email" placeholder="type email"></input>
+          <input id="submit" type="submit"></input>
         </form>
       </div>
     )
