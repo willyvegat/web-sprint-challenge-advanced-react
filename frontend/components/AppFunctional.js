@@ -83,6 +83,10 @@ export default function AppFunctional(props) {
     setState(initialState)
   } 
 
+  const resetEmail = () => {
+    setState({email: initialEmail});
+  } 
+
   const onChange = (evt) => {
     evt.preventDefault();
     const { value } = evt.target;
@@ -102,23 +106,19 @@ export default function AppFunctional(props) {
       y: state.coordinateY 
     })
       .then(res => {
-        console.log(res)
-        setState({ ...state, email: state.email, message: res.data.message})
+        setState({ ...state, email: state.email, message: res.data.message })
       })
       .catch(err => {
-        console.log(err)
-        setState({
-          ...state,
-          message: err.response.data.message
-        })
+        setState({ ...state, message: err.response.data.message })
       })
+    resetEmail();
   }
 
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
           <h3 id="coordinates">{`Coordinates (${state.coordinateX}, ${state.coordinateY})`}</h3>
-          <h3 id="steps">{`You moved ${state.steps} times`}</h3>
+          <h3 id="steps">{state.steps === 1 ? `You moved ${state.steps} time` : `You moved ${state.steps} times`}</h3>
         </div>
         <div id="grid">
           { 

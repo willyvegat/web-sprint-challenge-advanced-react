@@ -82,6 +82,10 @@ export default class AppClass extends React.Component {
 
   reset = () => {
     this.setState(initialState)
+  }
+
+  resetEmail = () => {
+    this.setState({...this.state, email: initialEmail})
   } 
 
   onChange = (evt) => {
@@ -103,16 +107,12 @@ export default class AppClass extends React.Component {
       y: this.state.coordinateY 
     })
       .then(res => {
-        console.log(res)
         this.setState({ ...this.state, email: this.state.email, message: res.data.message})
       })
       .catch(err => {
-        console.log(err)
-        this.setState({
-          ...this.state,
-          message: err.response.data.message
-        })
+        this.setState({ ...this.state, message: err.response.data.message })
       })
+    this.resetEmail();
   }
 
 
@@ -122,7 +122,7 @@ export default class AppClass extends React.Component {
       <div id="wrapper" className={className}>
         <div className="info">
           <h3 id="coordinates">{`Coordinates (${this.state.coordinateX}, ${this.state.coordinateY})`}</h3>
-          <h3 id="steps">{`You moved ${this.state.steps} times`}</h3>
+          <h3 id="steps">{this.state.steps === 1 ? `You moved ${this.state.steps} time` : `You moved ${this.state.steps} times`}</h3>
         </div>
         <div id="grid">
           { 
