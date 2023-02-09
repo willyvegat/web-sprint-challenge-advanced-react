@@ -134,7 +134,7 @@ export default class AppClass extends React.Component {
           }
         </div>
         <div className="info">
-          <h3 id="message">{this.state.message}{this.state.winner}</h3>
+          <h3 id="message">{this.state.message}</h3>
         </div>
         <div id="keypad">
           <button onClick={() => this.getNextIndex("left")} id="left">LEFT</button>

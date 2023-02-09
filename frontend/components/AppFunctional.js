@@ -125,7 +125,7 @@ export default function AppFunctional(props) {
           }
         </div>
         <div className="info">
-          <h3 id="message">{state.message}{state.winner}</h3>
+          <h3 id="message">{state.message}</h3>
         </div>
         <div id="keypad">
           <button onClick={() => getNextIndex("left")} id="left">LEFT</button>
