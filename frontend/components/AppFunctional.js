@@ -83,10 +83,6 @@ export default function AppFunctional(props) {
     setState({...initialState})
   } 
 
-  const resetEmail = () => {
-    setState({ ...state, email: initialEmail});
-  } 
-
   const onChange = (evt) => {
     evt.preventDefault();
     const { value } = evt.target;
@@ -106,12 +102,11 @@ export default function AppFunctional(props) {
       y: state.coordinateY 
     })
       .then(res => {
-        setState({ ...state, email: state.email, message: res.data.message })
+        setState({ ...state, email: initialEmail, message: res.data.message })
       })
       .catch(err => {
         setState({ ...state, message: err.response.data.message })
       })
-    resetEmail();
   }
 
   return (
